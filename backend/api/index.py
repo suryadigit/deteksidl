@@ -1,28 +1,25 @@
 from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model
-from flask_cors import CORS  # Import flask-cors untuk menangani CORS
-import tensorflow as tf
 import numpy as np
 from PIL import Image
 
 app = Flask(__name__)
 
-# Mengaktifkan CORS untuk semua asal (bisa dibatasi jika perlu)
-CORS(app, resources={r"/*": {"origins": "*"}})  
-
+# Load model
 MODEL_PATH = "lstm_image_classifier.h5"
 model = load_model(MODEL_PATH)
 
 def preprocess_image(image, target_size=(48, 48)):
-    image = image.convert("L")
-    image = image.resize(target_size)
-    image_array = np.array(image) / 255.0
-    image_array = image_array.reshape(1, target_size[0], target_size[1])
+    image = image.convert("L")  # Konversi ke grayscale
+    image = image.resize(target_size)  # Resize ke ukuran target
+    image_array = np.array(image) / 255.0  # Normalisasi piksel
+    image_array = image_array.reshape(1, target_size[0], target_size[1])  # Sesuaikan bentuk untuk model
     return image_array
 
 @app.route("/upload", methods=["POST"])
 def predict():
     label = ["marah", "jijik", "takut", "senang", "datar", "sedih", "terkejut"]
+    
     if "file" not in request.files:
         return jsonify({"error": "No file provided"}), 400
 
@@ -43,5 +40,6 @@ def predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Entry point untuk Vercel
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
