@@ -32,7 +32,7 @@ function App() {
 
     setLoading(true);
 
-    fetch("https://vercel.com/suryadis-projects-e675b777/flaskbackend/7rMBqJyiTuUTzUjSrYMZV9shjrgQ/upload", {
+    fetch("https://flaskbackend-mu.vercel.app/upload", {
       method: "POST",
       body: formData,
       headers: {
