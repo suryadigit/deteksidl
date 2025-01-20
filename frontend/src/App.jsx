@@ -18,7 +18,7 @@ function App() {
     }
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = async () => {
     if (!image) {
       alert("Pilih satu gambar untuk analisis!");
       return;
@@ -30,36 +30,35 @@ function App() {
     const formData = new FormData();
     formData.append("file", file);
 
-    setLoading(true);
+    setLoading(true); // Aktifkan status loading
 
-    fetch("https://backendflask-git-main-suryadis-projects-e675b777.vercel.app/upload", {
-      method: "POST",
-      body: formData,
-      headers: {
-        Accept: "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Gagal mengunggah gambar.");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.predicted_class) {
-          setResult(data);
-          setError("");
-        } else {
-          setResult(null);
-          setError(data.error || "Ekspresi tidak terdeteksi.");
-        }
-      })
-      // .catch((error) => {
-      //   console.error("Fetch error:", error);
-      //   setResult(null);
-      //   setError("Terjadi kesalahan saat mengunggah file.");
-      // })
-      .finally(() => setLoading(false));
+    try {
+      // Gunakan proxy yang sudah diatur
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Gagal mengunggah gambar.");
+      }
+
+      const data = await response.json();
+
+      if (data.predicted_class) {
+        setResult(data); // Simpan hasil prediksi
+        setError(""); // Reset error
+      } else {
+        setResult(null);
+        setError(data.error || "Ekspresi tidak terdeteksi.");
+      }
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setResult(null);
+      setError("Terjadi kesalahan saat mengunggah file.");
+    } finally {
+      setLoading(false); // Matikan status loading
+    }
   };
 
   const handleCancelClick = () => {
