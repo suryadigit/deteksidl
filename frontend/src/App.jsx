@@ -32,7 +32,7 @@ function App() {
 
     setLoading(true);
 
-    fetch("https://flaskbackend-mu.vercel.app/upload", {
+    fetch("https://backendflask-git-main-suryadis-projects-e675b777.vercel.app/upload", {
       method: "POST",
       body: formData,
       headers: {
@@ -54,11 +54,11 @@ function App() {
           setError(data.error || "Ekspresi tidak terdeteksi.");
         }
       })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-        setResult(null);
-        setError("Terjadi kesalahan saat mengunggah file.");
-      })
+      // .catch((error) => {
+      //   console.error("Fetch error:", error);
+      //   setResult(null);
+      //   setError("Terjadi kesalahan saat mengunggah file.");
+      // })
       .finally(() => setLoading(false));
   };
 
