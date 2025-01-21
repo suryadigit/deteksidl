@@ -6,7 +6,9 @@ from PIL import Image
 
 app = Flask(__name__)
 
-CORS(app, origins=["http://localhost:5173"])  
+# CORS(app, origins=["http://localhost:5173"])  
+CORS(app, origins=["http://localhost:5173"], allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Origin"])
+
 
 MODEL_PATH = "lstm_image_classifier.h5"
 model = load_model(MODEL_PATH)
